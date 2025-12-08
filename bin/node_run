@@ -1,0 +1,140 @@
+#!/system/bin/sh
+
+# Setup Path
+MODPATH=$(dirname "$0")/..
+BIN_DIR="$MODPATH/bin"
+LIB_DIR="$MODPATH/lib"
+VAR_DIR="$MODPATH/var"
+
+# APP Configuration
+NODE_BIN="$BIN_DIR/node"
+APP_DIR="$VAR_DIR/app"
+LOG_FILE="$VAR_DIR/log/node.log"
+PID_FILE="$VAR_DIR/tmp/node.pid"
+
+# Auto Entry Point
+if [ -f "$APP_DIR/index.js" ]; then
+    APP_MAIN="$APP_DIR/index.js"
+elif [ -f "$APP_DIR/main.js" ]; then
+    APP_MAIN="$APP_DIR/main.js"
+elif [ -f "$APP_DIR/app.js" ]; then
+    APP_MAIN="$APP_DIR/app.js"
+else
+    APP_MAIN=""
+fi
+
+# Check Busybox
+if [ -f "/data/adb/magisk/busybox" ]; then
+    BUSYBOX="/data/adb/magisk/busybox"
+else
+    BUSYBOX="busybox"
+fi
+SETUIDGID="$BUSYBOX setuidgid"
+
+# Smart PID Check
+check_pid_running() {
+    if [ -f "$PID_FILE" ]; then
+        local pid=$(cat "$PID_FILE")
+        if [ -d "/proc/$pid" ]; then
+            local cmdline=$(cat /proc/$pid/cmdline 2>/dev/null)
+            if echo "$cmdline" | grep -q "node"; then
+                return 0
+            fi
+        fi
+        rm -f "$PID_FILE"
+    fi
+    return 1
+}
+
+# Start Function
+start_service() {
+    mkdir -p "$VAR_DIR/log"
+    mkdir -p "$VAR_DIR/tmp"
+
+    if check_pid_running; then
+        echo "[INFO] Node.js Service is already running (PID: $(cat $PID_FILE))"
+        exit 0
+    fi
+
+    if [ -z "$APP_MAIN" ] || [ ! -f "$APP_MAIN" ]; then
+        echo "❌ Error! Entry file not found"
+        echo "[ERR] Entry file (index.js/main.js/app.js) not found!" >> "$LOG_FILE"
+        echo "[HINT] Make sure you put script in folder: $APP_DIR" >> "$LOG_FILE"
+        exit 1
+    fi
+
+    killall node > /dev/null 2>&1
+
+    echo "🚀 Starting Node.js Service..."
+    echo "[INFO] Starting Node.js Service..." >> "$LOG_FILE"
+
+    # PRODUCTION MODE
+    #nohup $SETUIDGID 0:3005 env LD_LIBRARY_PATH=$LIB_DIR \
+    #    $NODE_BIN $APP_MAIN \
+    #    >> "$LOG_FILE" 2>&1 &
+
+    # DEVELOPMENT MODE
+    nohup $SETUIDGID 0:3005 env LD_LIBRARY_PATH=$LIB_DIR \
+        $NODE_BIN --watch $APP_MAIN \
+        >> "$LOG_FILE" 2>&1 &
+
+    echo $! > "$PID_FILE"
+    
+    sleep 2
+
+    if check_pid_running; then
+        local pid=$(cat "$PID_FILE")
+        echo "✅ Service STARTED successfully (PID: $pid)"
+        echo "[INFO] Service STARTED successfully (PID: $(cat $PID_FILE))" >> "$LOG_FILE"
+        echo "[INFO] Running script: $APP_MAIN" >> "$LOG_FILE"
+    else
+        echo "❌ Service FAILED to start"
+        echo "   Cek detail error di: $LOG_FILE"
+        echo "[ERR] Service FAILED to start." >> "$LOG_FILE"
+    fi
+}
+
+# Stop Function
+stop_service() {
+    if [ -f "$PID_FILE" ]; then
+        local pid=$(cat "$PID_FILE")
+        kill -9 $pid > /dev/null 2>&1
+        rm -f "$PID_FILE"
+        echo "❌ Node.js Service stopped"
+        echo "[INFO] Node.js Service stopped." >> "$LOG_FILE"
+    else
+        killall node > /dev/null 2>&1
+        echo "[INFO] Cleaned up node processes." >> "$LOG_FILE"
+    fi
+}
+
+# Status Function
+status_service() {
+    if check_pid_running; then
+        local pid=$(cat "$PID_FILE")
+        
+        echo "✅ Node.js Service is RUNNING"
+        echo "   PID  : $pid"
+        echo "   File : $APP_MAIN"
+
+        local ram_usage=$(grep "VmRSS" "/proc/$pid/status" 2>/dev/null | awk '{printf "%.1f MB", $2/1024}')
+        
+        if [ -z "$ram_usage" ]; then ram_usage="0 MB"; fi
+        echo "   RAM  : $ram_usage"
+    else
+        echo "❌ Node.js Service is STOPPED"
+        if [ -f "$PID_FILE" ]; then
+            echo "   (Stale PID file found & cleaned)"
+            rm -f "$PID_FILE"
+        fi
+    fi
+}
+
+# Argument Control
+case "$1" in
+    -s|start) start_service ;;
+    -k|stop)  stop_service ;;
+    -r|restart) stop_service; sleep 1; start_service ;;
+    -t|status) status_service ;;
+    *) echo "Usage: $0 [-s|start] [-k|stop] [-r|restart] [-t|status]" ;;
+esac
