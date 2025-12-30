@@ -1,6 +1,6 @@
 id=nodejs
 name=Node.js LTS Server
-version=v1.0
-versionCode=1
+version=v1.10.1
+versionCode=11001
 author=suangnet
 description=Standalone Node.js LTS Server for Android (Magisk).
