@@ -40,7 +40,6 @@ if [ -f "$MODPATH/service.d/nodejs_service.sh" ]; then
     rmdir $MODPATH/service.d
 fi
 
-ui_print "- Permission have been set"
 ui_print " "
 ui_print "[100] Finish!"
 ui_print "Reboot to start server"
