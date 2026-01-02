@@ -40,8 +40,6 @@ if [ -f "$MODPATH/service.d/nodejs_service.sh" ]; then
     rmdir $MODPATH/service.d
 fi
 
-ui_print " "
-ui_print "[100] Finish!"
-ui_print "Reboot to start server"
-ui_print "Support: https://t.me/suangnet"
-ui_print " "
+ui_print "- Installation complete!"
+ui_print "- Reboot to start Node.js server."
+ui_print "- Support: https://t.me/suangnet"
