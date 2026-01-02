@@ -115,7 +115,7 @@ status_service() {
         
         echo "✅ Node.js Service is RUNNING"
         echo "   PID  : $pid"
-        echo "   File : $APP_MAIN"
+        echo "   APP  : $APP_MAIN"
 
         local ram_usage=$(grep "VmRSS" "/proc/$pid/status" 2>/dev/null | awk '{printf "%.1f MB", $2/1024}')
         
