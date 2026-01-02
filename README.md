@@ -7,8 +7,8 @@ Run JavaScript apps, Telegram Bots (Long Polling/Websocket), or local automation
 
 ## 🌟 Features
 
-- **Latest Node.js LTS:** Includes pre-compiled **Node.js v22.21.1** binary.
-- **Standalone:** Runs independently with its own libraries (Libicu, Libssl, Libuv, C-ares, etc.). No Termux installation required.
+- **Latest Node.js LTS:** Includes pre-compiled **Node.js v24.12.0** binary.
+- **Standalone:** Runs independently with its own libraries (Libicu, Libssl, Libuv, C-ares, etc.).
 - **Auto-Start:** Automatically starts your app/bot on system boot (Global Service method).
 - **Auto Entry Point:** Automatically detects and runs `index.js`, `main.js`, or `app.js`.
 - **Root Access:** Runs with root privileges (via Magisk), allowing system-level operations.
@@ -27,7 +27,7 @@ Run JavaScript apps, Telegram Bots (Long Polling/Websocket), or local automation
 4.  Tap **"Install from storage"** and select the zip file.
 5.  Reboot your device.
 
-The service will start automatically after the boot animation finishes.
+The service will start automatically after system boot.
 
 ## 🚀 Deployment (How to use)
 
