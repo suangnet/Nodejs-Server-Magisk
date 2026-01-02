@@ -1,6 +1,6 @@
 {
-  "version": "v1.10.1",
-  "versionCode": 11001,
-  "zipUrl": "https://github.com/suangnet/Nodejs-Server-Magisk/releases/download/v1.10.1/nodejs-magisk-v1.10.1.zip",
+  "version": "v1.1.0",
+  "versionCode": 10100,
+  "zipUrl": "https://github.com/suangnet/Nodejs-Server-Magisk/releases/download/v1.1.0/nodejs-magisk-v1.1.0.zip",
   "changelog": "https://raw.githubusercontent.com/suangnet/Nodejs-Server-Magisk/main/changelog.md"
 }
