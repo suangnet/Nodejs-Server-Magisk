@@ -68,14 +68,17 @@ start_service() {
     echo "🚀 Starting Node.js Service..."
     echo "[INFO] Starting Node.js Service..." >> "$LOG_FILE"
 
-    # PRODUCTION MODE
-    #nohup $SETUIDGID 0:3005 env LD_LIBRARY_PATH=$LIB_DIR \
-    #    $NODE_BIN $APP_MAIN \
-    #    >> "$LOG_FILE" 2>&1 &
+    APP_DIR=$(dirname "$APP_MAIN")
+    ENV_FILE="$APP_DIR/.env"
 
-    # DEVELOPMENT MODE
+    if [ -f "$ENV_FILE" ]; then
+        NODE_ARGS="--env-file=$ENV_FILE --watch"
+    else
+        NODE_ARGS="--watch"
+    fi
+
     nohup $SETUIDGID 0:3005 env LD_LIBRARY_PATH=$LIB_DIR \
-        $NODE_BIN --watch $APP_MAIN \
+        $NODE_BIN $NODE_ARGS $APP_MAIN \
         >> "$LOG_FILE" 2>&1 &
 
     echo $! > "$PID_FILE"
