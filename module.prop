@@ -4,3 +4,4 @@ version=v1.1.0
 versionCode=10100
 author=suangnet
 description=Standalone Node.js LTS Server for Android (Magisk).
+updateJson=https://raw.githubusercontent.com/suangnet/Nodejs-Server-Magisk/main/update.json

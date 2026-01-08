@@ -1,11 +1,11 @@
 # Node.js LTS Server for Magisk
 
-![Magisk](https://img.shields.io/badge/Magisk-Module-green) ![Nodejs](https://img.shields.io/badge/Node.js-LTS-green) ![License](https://img.shields.io/badge/License-MIT-orange)
+![Magisk](https://img.shields.io/badge/Magisk-Module-green) ![Nodejs](https://img.shields.io/badge/Node.js-LTS-green) ![License](https://img.shields.io/badge/License-MIT-orange) [![GitHub release](https://img.shields.io/github/v/release/suangnet/Nodejs-Server-Magisk?style=flat&color=blue&label=Release)](https://github.com/suangnet/Nodejs-Server-Magisk/releases/latest)
 
 A standalone, lightweight, and fully functional Node.js LTS runtime module for Android, powered by Magisk.
 Run JavaScript apps, Telegram Bots (Long Polling/Websocket), or local automation scripts on your device without the need for Termux or active background apps.
 
-## 🌟 Features
+## Features
 
 - **Latest Node.js LTS:** Includes pre-compiled **Node.js v24.12.0** binary.
 - **Architecture Support:** Supports both ARM (32-bit) and ARM64 (64-bit) devices.
@@ -14,15 +14,15 @@ Run JavaScript apps, Telegram Bots (Long Polling/Websocket), or local automation
 - **Auto Entry Point:** Automatically detects and runs `index.js`, `main.js`, or `app.js`.
 - **Root Access:** Runs with root privileges (via Magisk), allowing system-level operations.
 
-## 📋 Requirements
+## Requirements
 
 - Rooted Android Device (Android 7.0+)
 - **Magisk Manager** (Magisk v20.4 or newer)
 - **Busybox for Android NDK** module installed (Required for script execution)
 
-## 📦 Installation
+## Installation
 
-1.  Download the latest `nodejs-lts.zip` release.
+1.  Download the latest `nodejs-lts.zip` release from the [Releases Page](https://github.com/suangnet/Nodejs-Server-Magisk/releases/latest).
 2.  Open **Magisk Manager**.
 3.  Go to the **Modules** tab.
 4.  Tap **"Install from storage"** and select the zip file.
@@ -30,7 +30,7 @@ Run JavaScript apps, Telegram Bots (Long Polling/Websocket), or local automation
 
 The service will start automatically after system boot.
 
-## 🚀 Deployment (How to use)
+## Deployment (How to use)
 
 Unlike PHP, Node.js applications often require `node_modules`.
 
@@ -41,7 +41,7 @@ Unlike PHP, Node.js applications often require `node_modules`.
 **Deploy Path:**
 `/data/adb/modules/nodejs/var/app/`
 
-## ⚙️ Configuration & Paths
+## Configuration & Paths
 
 After installation, the module resides in `/data/adb/modules/nodejs/`.
 
@@ -54,7 +54,7 @@ After installation, the module resides in `/data/adb/modules/nodejs/`.
 
 > **Note:** To edit files or copy project folders, use a root explorer (like MT Manager, Mixplorer) or terminal via `su`.
 
-## 🛠️ Manual Usage (Terminal)
+## Manual Usage (Terminal)
 
 You can control the server manually using `su` via Terminal (Termux/ADB):
 
@@ -82,7 +82,7 @@ You can control the server manually using `su` via Terminal (Termux/ADB):
 /data/adb/modules/nodejs/bin/node_run -r
 ```
 
-## 📜 License
+## License
 
 This project is a bundle of software with different licenses:
 
@@ -90,7 +90,7 @@ This project is a bundle of software with different licenses:
 - **Node.js Binary** is licensed under the **Node.js License**.
 - **Libraries** (libicu, openssl, etc.) are copyright of their respective owners.
 
-## 🤝 Credits
+## Credits
 
 - **Node.js Foundation** - For the Node.js source.
 - **Termux** - For the build environment and libraries.
