@@ -12,6 +12,9 @@ APP_DIR="$VAR_DIR/app"
 LOG_FILE="$VAR_DIR/log/node.log"
 PID_FILE="$VAR_DIR/tmp/node.pid"
 
+# Set Timezone
+export TZ=$(getprop persist.sys.timezone)
+
 # Auto Entry Point
 if [ -f "$APP_DIR/index.js" ]; then
     APP_MAIN="$APP_DIR/index.js"
@@ -68,16 +71,17 @@ start_service() {
     echo "🚀 Starting Node.js Service..."
     echo "[INFO] Starting Node.js Service..." >> "$LOG_FILE"
 
-    APP_DIR=$(dirname "$APP_MAIN")
     ENV_FILE="$APP_DIR/.env"
 
     if [ -f "$ENV_FILE" ]; then
         NODE_ARGS="--env-file=$ENV_FILE --watch"
+        echo "[INFO] Using .env file at: $ENV_FILE" >> "$LOG_FILE"
     else
         NODE_ARGS="--watch"
+        echo "[WARN] No .env file found at $ENV_FILE" >> "$LOG_FILE"
     fi
-
-    nohup $SETUIDGID 0:3005 env LD_LIBRARY_PATH=$LIB_DIR \
+    
+    nohup $SETUIDGID 0:3003 env LD_LIBRARY_PATH=$LIB_DIR \
         $NODE_BIN $NODE_ARGS $APP_MAIN \
         >> "$LOG_FILE" 2>&1 &
 
@@ -88,7 +92,7 @@ start_service() {
     if check_pid_running; then
         local pid=$(cat "$PID_FILE")
         echo "✅ Service STARTED successfully (PID: $pid)"
-        echo "[INFO] Service STARTED successfully (PID: $(cat $PID_FILE))" >> "$LOG_FILE"
+        echo "[INFO] Service STARTED successfully (PID: $pid)" >> "$LOG_FILE"
         echo "[INFO] Running script: $APP_MAIN" >> "$LOG_FILE"
     else
         echo "❌ Service FAILED to start"
@@ -103,7 +107,7 @@ stop_service() {
         local pid=$(cat "$PID_FILE")
         kill -9 $pid > /dev/null 2>&1
         rm -f "$PID_FILE"
-        echo "❌ Node.js Service stopped"
+        echo "✅ Node.js Service stopped"
         echo "[INFO] Node.js Service stopped." >> "$LOG_FILE"
     else
         killall node > /dev/null 2>&1
@@ -120,10 +124,15 @@ status_service() {
         echo "   PID  : $pid"
         echo "   APP  : $APP_MAIN"
 
+        # Cek RAM Usage
         local ram_usage=$(grep "VmRSS" "/proc/$pid/status" 2>/dev/null | awk '{printf "%.1f MB", $2/1024}')
         
         if [ -z "$ram_usage" ]; then ram_usage="0 MB"; fi
         echo "   RAM  : $ram_usage"
+        
+        # Cek Uptime process
+        local uptime=$(ps -o etime= -p $pid 2>/dev/null)
+        echo "   TIME : $uptime"
     else
         echo "❌ Node.js Service is STOPPED"
         if [ -f "$PID_FILE" ]; then
