@@ -7,7 +7,7 @@ Run JavaScript apps, Telegram Bots (Long Polling/Websocket), or local automation
 
 ## Features
 
-- **Latest Node.js LTS:** Includes pre-compiled **Node.js v24.12.0** binary.
+- **Latest Node.js LTS:** Includes pre-compiled **Node.js v24.22.2** binary.
 - **Architecture Support:** Supports both ARM (32-bit) and ARM64 (64-bit) devices.
 - **Standalone:** Runs independently with its own libraries (Libicu, Libssl, Libuv, C-ares, etc.).
 - **Auto-Start:** Automatically starts your app/bot on system boot (Global Service method).
